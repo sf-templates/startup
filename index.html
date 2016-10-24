@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<!-- 替换为自己的Title -->
+	<title>God Page</title>
+	<script type="text/javascript" src="lib/jquery.min.js"></script>
+	<script type="text/javascript" src="lib/vue.min.js"></script>
+	<script type="text/javascript" src="lib/sailfish.dll.js"></script>
+    <script type="text/javascript" src="lib/sailfish.dev.js"></script>
+</head>
+<body>
+	<!-- 工具组件引入，无需修改 -->
+	<utils></utils>
+	<div class="frame-header">
+		<!-- 顶部nav栏 -->
+		 <nav-bar :title="'God System'" :has-search="true" :menu="navBarMenu"></nav-bar>
+	</div>
+
+	<div class="frame-content">
+		<div class="frame-left">
+			<!-- 左侧导航栏 -->
+			<nav-left :menu="navLeftMenu"></nav-left>
+		</div>
+		<div class="frame-main">
+			<!-- page组件引入 -->
+			<page-bar :index=""></page-bar>
+		</div>
+	</div>
+	<script type="text/javascript">
+		startApp({
+			el: 'body',
+			data: {
+				navBarMenu: [{
+					icon: 'book',
+					title: '系统使用'
+				},{
+                    icon: 'user',
+                    title: 'God',
+                    menu: [{
+                        title: '我的主页'
+                    }, {
+                        title: '我的档案'
+                    }]
+                }],
+                navLeftMenu: [{
+                	title: '主页',
+                	icon: 'paper-plane',
+                	href: '#/app/home.html'
+                },{
+                	title: '配置项',
+                	icon: 'file-text',
+                	menu: [{
+                		title: '表格',
+                		icon: 'file-text',
+                		href: '#/app/table-demo.html'
+                	}]
+                }]
+			}
+		});
+	</script>
+</body>
+</html>

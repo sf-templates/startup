@@ -1,0 +1,158 @@
+<template>
+    <div class="container-fluid">
+        <div class="spacing-20"></div>
+        <!-- 条件面板 -->
+        <condition-panel
+            v-ref:panel
+            @query="queryTable"
+        >
+            <form-plus>
+                <sf-row>
+                    <sf-col :span="3/12">
+                        <sf-form-group :label="'流水号'" :label-span="'40%'" :control-span="'60%'">
+                            <input-text v-ref:input :name="'id'"></input-text>
+                        </sf-form-group>
+                    </sf-col>
+                    <sf-col :span="3/12">
+                        <sf-form-group :label="'归属公司'" :label-span="'40%'" :control-span="'60%'">
+                            <input-text :name="'company'"></input-text>
+                        </sf-form-group>
+                    </sf-col>
+                    <sf-col :span="3/12">
+                        <sf-form-group :label="'报销金额'" :label-span="'40%'" :control-span="'60%'">
+                            <input-text :name="'money'"></input-text>
+                        </sf-form-group>
+                    </sf-col>
+                </sf-row>
+                <sf-row>
+                    <sf-col :span="3/12">
+                        <sf-form-group :label="'流水号'" :label-span="'40%'" :control-span="'60%'">
+                            <input-text v-ref:input :name="'id'"></input-text>
+                        </sf-form-group>
+                    </sf-col>
+                    <sf-col :span="3/12">
+                        <sf-form-group :label="'归属公司'" :label-span="'40%'" :control-span="'60%'" >
+                            <input-text :name="'company'"></input-text>
+                        </sf-form-group>
+                    </sf-col>
+                    <sf-col :span="3/12">
+                        <sf-form-group :label="'报销金额'" :label-span="'40%'" :control-span="'60%'">
+                            <input-text :name="'money'"></input-text>
+                        </sf-form-group>
+                    </sf-col>
+                </sf-row>
+            </form-plus>
+        </condition-panel>
+
+        <!-- 工具栏 -->
+        <tool-bar
+            v-ref:tool
+            @click-download="toolOp()"
+            @click-check="toolOp()"
+            @click-output="toolOp()"
+            @click-pay="toolOp()"
+            @click-print="toolOp()"
+            :btns="toolbarBtns"
+        ></tool-bar>
+
+        <!-- 列表对象 -->
+        <list
+            v-ref:table
+            :source-query="{name:'abc'}"
+            :source-path="'/src/json/tablex.json'"
+            :response-handler="handler"
+            :has-detail="true"
+            :detail-display="detailDisplay"
+            :has-pagination="true"
+        >
+            <list-col :field="'id'" :display="displayerLink" :title="'流水号'"></list-col>
+            <list-col :field="'applyDate'" :title="'流水号'" :sortable="true"></list-col>
+            <list-col :field="'outDate'"  :title="'申请时间'"></list-col>
+            <list-col :field="'price'"  :title="'出差时间'"></list-col>
+            <list-col :field="'person'"  :title="'报销金额'"></list-col>
+            <list-col :field="'company'"  :title="'收款人'"></list-col>
+            <list-col :field="'center'"  :title="'利润中心'"></list-col>
+            <list-col :field="'state'"  :title="'审核状态'"></list-col>
+            <list-col :title="'操作'">
+                <list-op :text="'删除'" :icon="'trash'" :motion="delete" :if="condition"></list-op>
+                <list-op :text="'编辑'" :icon="'edit'" :motion="edit"></list-op>
+            </list-col>
+        </list>
+    </div>
+	<style>
+	.container-fluid {
+		padding: 20px;
+	}
+	</style>
+</template>
+
+<script>
+    export default {
+        ready: function() {
+            window.refs = this.$refs;
+        },
+        data:function(){
+            return {
+                title:'数据表格',
+                toolbarBtns: [{
+                    id:'download',
+                    icon:'download',
+                    text:'付款模板',
+                },{
+                    id:'check',
+                    icon:'check-square-o',
+                    text:'批量审核',
+                },{
+                    id:'output',
+                    icon:'download',
+                    text:'导出',
+                },{
+                    id:'pay',
+                    icon:'check-square-o',
+                    text:'批量提交支付',
+                },{
+                    id:'print',
+                    icon:'print',
+                    text:'批量打印',
+                }]
+            }
+        },
+        methods: {
+            // 操作工具栏
+            toolOp: function() {
+                var data = this.$refs.table.getSelectedData();
+                alert('批量操作: '+JSON.stringify(data));
+            },
+            // 对表格内容进行查询
+            queryTable: function(query) {
+                this.$refs.table.filter(query);
+            },
+            // 数据处理
+            handler: function(a) {
+                console.log(a);
+                a.rows[0].applyDate = '00000000000';
+                return a;
+            },
+            displayerLink: function(value, row, index) {
+                return '<a href="'+value.link+'">'+value.name+'</a>';
+            },
+            delete: function(row, index) {
+                console.log('删除', JSON.stringify(row), index);
+                alert('删除' + JSON.stringify(row)+ index);
+            },
+            edit: function(row, index) {
+                console.log('编辑', JSON.stringify(row), index);
+                alert('编辑'+JSON.stringify(row)+ index);
+            },
+            condition: function(row) {
+                if(row.company ===  'xxxxxxx') {
+                    return false;
+                }
+                return true;
+            },
+            detailDisplay: function(row) {
+                return '<div>'+row.center+'</div><div>'+row.company+'</div>'
+            }
+        }
+    }
+</script>
